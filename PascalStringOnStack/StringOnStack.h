@@ -1,6 +1,8 @@
 #include <array>
 #include <algorithm>
 #include <assert.h>
+#include <stdexcept>
+
 template<typename T, const size_t N>
 class basic_string_on_stack {
     static_assert(N != 0, "Cannot invoke container with 0 size");
@@ -23,8 +25,16 @@ public:
     basic_string_on_stack(basic_string_on_stack<T, N> &&param) : m_len(param.m_len){
         m_container = move(param.m_container);
     }
+    basic_string_on_stack<T, N> substr(size_t idx, size_t count) const {
+        if (idx + count >= m_len){
+            throw std::out_of_range();
+        }
+        return basic_string_on_stack<T, N> {begin() + idx, count};
+    }
+    
     constexpr size_t capacity() const noexcept { return N; }
     constexpr size_t size() const noexcept { return m_len; }
+    constexpr size_t length() const noexcept { return m_len; }
     const T* begin() const noexcept { return m_container.begin(); }
     const T* end() const noexcept { return m_container.data() + m_len; }
     const T* data() const noexcept { return m_container.data(); }
