@@ -84,7 +84,7 @@ private:
     }
     constexpr size_t get_string_length(const T* ch){
         auto startIdx = ch;
-        while(*(ch++));
+        while(*(++ch));
         return (ch - startIdx);
     }
     std::array<T, N> m_container;
